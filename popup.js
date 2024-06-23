@@ -1,3 +1,9 @@
+document.getElementById('create-event-button').addEventListener('click', () => {
+  chrome.runtime.sendMessage({ action: 'createEvent' }, response => {
+    console.log(response);
+  });
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   chrome.storage.local.get(['gptResponse'], (result) => {
     if (result.gptResponse) {

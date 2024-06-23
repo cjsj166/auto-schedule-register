@@ -3,6 +3,8 @@
   "name": "GPT-3.5 Text Processor",
   "version": "1.0",
   "permissions": [
+    "identity",
+    "https://www.googleapis.com/",
     "activeTab",
     "contextMenus",
     "storage",
@@ -18,5 +20,11 @@
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     }
+  },
+  "oauth2": {
+    "client_id": "914778911874-qqr6ed7a4seco5gv3undh084cuob8som.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar.events"
+    ]
   }
 }
