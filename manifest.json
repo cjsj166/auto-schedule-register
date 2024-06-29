@@ -1,26 +1,35 @@
 {
   "manifest_version": 3,
-  "name": "GPT-3.5 Text Processor",
+  "name": "Auto Schedule Register",
   "version": "1.0",
   "permissions": [
     "identity",
-    "https://www.googleapis.com/",
     "activeTab",
     "contextMenus",
     "storage",
     "scripting"
   ],
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ],
   "background": {
     "service_worker": "background.js"
   },
   "action": {
-    "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     }
   },
+  "options_page": "options.html",
   "oauth2": {
     "client_id": "914778911874-qqr6ed7a4seco5gv3undh084cuob8som.apps.googleusercontent.com",
     "scopes": [

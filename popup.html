@@ -1,17 +1,36 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+  <link rel="stylesheet" href="popup.css">
   <title>GPT-3.5 Text Processor</title>
   <script src="popup.js"></script>
 </head>
+
 <body>
-  <h1>Selected Text Response</h1>
-  <p id="gptResponse"></p>
-  <h1>Enter Duration (hours)</h1>
-  <input type="number" id="timeRequired"><br>
-  <button id="calculateEnd">Calculate End Time</button>
-  <h1>Create Calendar Event</h1>
+
+  <div>
+    Event Summary :
+    <input type="text" id="summary" value=""><br>
+  </div>
+
+  <div>
+    Event start date :
+    <input type="datetime-local" id="startDate" value=""><br>
+  </div>
+
+  <div>
+    Event end date :
+    <input type="datetime-local" id="endDate" value=""><br>
+  </div>
+
+  <div>
+    Description :
+    <textarea type="text" rows="4" cols="45" id="description" value=""></textarea><br>
+  </div>
+
   <button id="create-event-button">Create Event</button>
   <script src="popup.js"></script>
 </body>
+
 </html>

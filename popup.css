@@ -1,0 +1,8 @@
+#css #create-event-button {
+  font-size: 20px;
+  /* Increases the font size */
+  padding: 10px 20px;
+  /* Adds more space inside the button around the text */
+  cursor: pointer;
+  /* Changes the cursor to a pointer when hovering over the button */
+}
