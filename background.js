@@ -57,11 +57,14 @@ chrome.runtime.onInstalled.addListener(() => {
   // Make a listener to close the window after event is registered in Google Calendar
   chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.action === 'closePopup') {
-      if (popupWindowId) {
-        chrome.windows.remove(popupWindowId, function () {
-          popupWindowId = null;
-        });
-      }
+
+      chrome.storage.local.get(['windowId'], (result) => {
+        if (result.windowId) {
+          chrome.windows.remove(result.windowId, function () {
+            chrome.storage.local.set({ 'windowId': null });
+          });
+        }
+      });
     }
   });
 
@@ -70,6 +73,7 @@ chrome.runtime.onInstalled.addListener(() => {
       chrome.tabs.create({ url: message.link });
     }
   });
+
 });
 
 
@@ -77,6 +81,7 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === "fetch-gpt3-response") {
     const selectedText = info.selectionText;
+    console.log('tab:', tab.id, 'selectedText:', selectedText)
     currentTabId = tab.id;
 
     if (popupWindowId !== null) {
@@ -92,7 +97,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       width: 400,
       height: 250
     }, function (window) {
-      popupWindowId = window.id;
+      chrome.storage.local.set({ 'windowId': window.id });
     });
 
     // Fetch organized schedule info using GPT-3
@@ -175,8 +180,9 @@ async function fetchScheduleByGPT3Response(inputText) {
   const isoString = now.toISOString();
   prompt_text = `Information about arranged schedule will be provided.\n\
 Do your best to describe the schedule as concisely as possible in json format.\n\
-Consider the date now : ${isoString}.\n\" + "Required json format is as follow\n\
-{ \"starting_date_time\": \"YYYY-MM-DDThh:mm:ss\", \"end_date_time\": \"YYYY-MM-DDThh:mm:ss\", \"title\": \"Title of the event\", \"description\": \"description of the meeting, meeting room url, address of the place, etc.\" }`
+Consider the date now : ${isoString}.\n\" + "Required json format is as follow.\n\
+{ \"starting_date_time\": \"YYYY-MM-DDThh:mm:ss\", \"end_date_time\": \"YYYY-MM-DDThh:mm:ss\", \"title\": \"Title of the event\", \"description\": \"description of the meeting, meeting room url, address of the place, etc.\" \
+ For title and description, you need to answer in the same language in which you were asked.}`
 
   const headers = {
     'Content-Type': 'application/json',
@@ -201,10 +207,12 @@ Consider the date now : ${isoString}.\n\" + "Required json format is as follow\n
       headers: headers,
       body: body
     });
+    console.log('GPT-3 response:', response);
+
     const data = await response.json();
     const scheduleName = data.choices[0].message.content;
 
-    console.log('GPT-3 response:', scheduleName);
+    console.log('schedule info in GPT-3 response:', scheduleName);
     schedule = JSON.parse(scheduleName);
     // console.log(schedule);
 
