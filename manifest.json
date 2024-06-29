@@ -3,11 +3,9 @@
   "name": "Auto Schedule Register",
   "version": "1.0",
   "permissions": [
-    "identity",
-    "activeTab",
     "contextMenus",
-    "storage",
-    "scripting"
+    "identity",
+    "storage"
   ],
   "content_scripts": [
     {
