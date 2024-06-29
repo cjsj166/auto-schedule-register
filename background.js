@@ -23,7 +23,7 @@ popupWindowId = null
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.sync.get(['apiUrl', 'apiKey'], function (items) {
 
-    url = ''
+    url = 'https://api.openai.com/v1/chat/completions'
     apiKey = items.apiKey;
   });
 
