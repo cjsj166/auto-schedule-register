@@ -12,7 +12,8 @@
   "content_scripts": [
     {
       "matches": [
-        "<all_urls>"
+        "https://mail.google.com/*",
+        "https://keep.google.com/*"
       ],
       "js": [
         "content.js"
