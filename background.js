@@ -199,6 +199,12 @@ Consider the date now : ${isoString}.\n\" + "Required json format is as follow.\
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${apiKey}`
   };
+  // console log when apiKey is null
+  console.log(`use api key : ${apiKey}`)
+  if (apiKey == null) {
+    console.log('apiKey is null!!')
+  } 
+
   const body = JSON.stringify({
     model: "gpt-3.5-turbo-1106",
     response_format: { "type": "json_object" },
