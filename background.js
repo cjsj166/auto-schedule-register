@@ -20,7 +20,7 @@ currentTabId = null;
 popupWindowId = null
 
 // Make "Fetch GPT-3 Response" button in right click menus
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener( () => {
   chrome.storage.sync.get(['apiUrl', 'apiKey'], function (items) {
 
     url = 'https://api.openai.com/v1/chat/completions'
@@ -36,20 +36,30 @@ chrome.runtime.onInstalled.addListener(() => {
   // Make a listener that create event when submit button in popup clicked
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'createEvent') {
-      console.log('createEvent message received')
+      // console.log('createEvent message received')
 
       // Get event info from popup.html
-      chrome.storage.local.get(['eventInfo'], (result) => {
+      chrome.storage.local.get(['eventInfo'],async (result) => {
         // console.log("Result: ", result);
         if (result.eventInfo) {
           // console.log(result.eventInfo);
 
           createCalendarEvent(result.eventInfo).then(response => {
+            // console.log('createCalendarEvent finished. send response to popup.js \n response :');
+            // console.log(response);
             sendResponse(response);
+            // console.log('response sent')
           });
-          return true; // 비동기 응답을 위해 true를 반환
+          
+          // const response = await createCalendarEvent(result.eventInfo);
+          // console.log('createCalendarEvent finished. send response to popup.js')
+          // sendResponse(response);
+          // console.log('response sent')
+            
         }
+        return true; // 비동기 응답을 위해 true를 반환
       });
+      return true;
 
     }
   });
@@ -70,6 +80,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'createCalendarTab') {
+      // console.log('createCalendarTab activated')
       chrome.tabs.create({ url: message.link });
     }
   });
@@ -81,7 +92,7 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === "fetch-gpt3-response") {
     const selectedText = info.selectionText;
-    console.log('tab:', tab.id, 'selectedText:', selectedText)
+    // console.log('tab:', tab.id, 'selectedText:', selectedText)
     currentTabId = tab.id;
 
     if (popupWindowId !== null) {
@@ -197,7 +208,7 @@ Consider the date now : ${isoString}.\n\" + "Required json format is as follow.\
     ]
   });
 
-  console.log(prompt_text)
+  // console.log(prompt_text)
 
   console.log('fetchGPT3Response called with input:', inputText);
 
@@ -207,7 +218,7 @@ Consider the date now : ${isoString}.\n\" + "Required json format is as follow.\
       headers: headers,
       body: body
     });
-    console.log('GPT-3 response:', response);
+    // console.log('GPT-3 response:', response);
 
     const data = await response.json();
     const scheduleName = data.choices[0].message.content;
@@ -250,11 +261,11 @@ function getAccessToken(interactive) {
 // Making an event with Google Calendar API
 async function createCalendarEvent(eventSchedule) {
   try {
-    console.log('createCalendarEvent function called')
+    // console.log('createCalendarEvent function called')
     // First, get access token
     const token = await getAccessToken(true);
-    console.log('Make eventSchedule : ')
-    console.log(eventSchedule)
+    // console.log('Make eventSchedule : ')
+    // console.log(eventSchedule)
     const response = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
       method: 'POST',
       headers: {
@@ -265,7 +276,7 @@ async function createCalendarEvent(eventSchedule) {
     });
 
     if (response.ok) {
-      console.log('Got response')
+      // console.log('Got response')
       const eventData = await response.json();
       console.log('Event created: ', eventData.htmlLink);
 
@@ -274,8 +285,8 @@ async function createCalendarEvent(eventSchedule) {
       // });
 
       // Send message to content.js to show the link of the created event
-      console.log('Sending message to currentTabId: ', currentTabId)
-      chrome.tabs.sendMessage(currentTabId, { action: 'eventCreated', link: eventData.htmlLink });
+      // console.log('Sending message to currentTabId: ', currentTabId)
+      // chrome.tabs.sendMessage(currentTabId, { action: 'eventCreated', link: eventData.htmlLink });
 
       return { status: 'success', link: eventData.htmlLink };
     } else {
