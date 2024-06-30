@@ -7,17 +7,6 @@
     "identity",
     "storage"
   ],
-  "content_scripts": [
-    {
-      "matches": [
-        "https://mail.google.com/*",
-        "https://keep.google.com/*"
-      ],
-      "js": [
-        "content.js"
-      ]
-    }
-  ],
   "background": {
     "service_worker": "background.js"
   },
