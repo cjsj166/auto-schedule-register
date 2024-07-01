@@ -18,12 +18,15 @@ chrome.runtime.onInstalled.addListener(() => {
     if (request.action === 'createEvent') {
       // console.log('createEvent message received')
 
-
+      console.log('createEvent activated')
       // Get event info from popup.html
       chrome.storage.local.get(['eventInfo'], async (result) => {
+
         if (result.eventInfo) {
-          createCalendarEvent(result.eventInfo).then(response => {
-            sendResponse(response);
+          console.log('get result.eventInfo for createEvent')
+          createCalendarEvent(result.eventInfo).then(async response => {
+            console.log('send response')
+            await sendResponse(response);
             console.log('response sent')
           });
 
