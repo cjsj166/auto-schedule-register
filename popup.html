@@ -3,33 +3,46 @@
 
 <head>
   <link rel="stylesheet" href="popup.css">
-  <title>GPT-3.5 Text Processor</title>
+  <title>Auto Schedule Register</title>
+  <style>
+    #fail-div {
+      display: none;
+    }
+    #success-div {
+      display: none;
+    }
+  </style>
   <script src="popup.js"></script>
 </head>
 
 <body>
-
-  <div>
+  <div id="form">
     Event Summary :
     <input type="text" id="summary" value=""><br>
-  </div>
 
-  <div>
     Event start date :
     <input type="datetime-local" id="startDate" value=""><br>
-  </div>
 
-  <div>
     Event end date :
     <input type="datetime-local" id="endDate" value=""><br>
-  </div>
 
-  <div>
     Description :
     <textarea type="text" rows="4" cols="45" id="description" value=""></textarea><br>
+
+    <button id="create-event-button">Create Event</button>
   </div>
 
-  <button id="create-event-button">Create Event</button>
+  <div id="success-div">
+    <h2>Event Successfully Created!</h2>
+    <p id="link"></p>
+    <button id="create-calendar-tab"> Check Created Event </button>
+  </div>
+
+  <div id="fail-div">
+    <h2>Event Creation Failed!</h2>
+  </div>
+
+
   <script src="popup.js"></script>
 </body>
 
