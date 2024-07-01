@@ -87,6 +87,7 @@ function messageHandler(request, sender, sendResponse) {
 
         // chrome.runtime.sendMessage({ action: 'closePopup' });
       });
+      return true;
     });
 
   }, { once: true });

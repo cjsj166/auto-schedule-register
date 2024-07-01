@@ -24,22 +24,15 @@ chrome.runtime.onInstalled.addListener(() => {
 
         if (result.eventInfo) {
           console.log('get result.eventInfo for createEvent')
-          createCalendarEvent(result.eventInfo).then(async response => {
-            console.log('send response')
-            await sendResponse(response);
-            console.log('response sent')
-          });
-
-          // const response = await createCalendarEvent(result.eventInfo);
-          // console.log('createCalendarEvent finished. send response to popup.js')
-          // sendResponse(response);
-          // console.log('response sent')
+          const response = await createCalendarEvent(result.eventInfo)
+          console.log('send response')
+          await sendResponse(response);
+          console.log('response sent')
 
         }
         return true; // 비동기 응답을 위해 true를 반환
       });
       return true;
-
     }
   });
 
