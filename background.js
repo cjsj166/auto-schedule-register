@@ -14,7 +14,7 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 
   // Make a listener that create event when submit button in popup clicked
-  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     if (request.action === 'createEvent') {
       // console.log('createEvent message received')
 
@@ -23,15 +23,18 @@ chrome.runtime.onInstalled.addListener(() => {
       chrome.storage.local.get(['eventInfo'], async (result) => {
 
         if (result.eventInfo) {
-          console.log('get result.eventInfo for createEvent')
-          const response = await createCalendarEvent(result.eventInfo)
-          console.log('send response')
-          await sendResponse(response);
-          console.log('response sent')
+          console.log('get result.eventInfo for createEvent');
+          const response = await createCalendarEvent(result.eventInfo);
 
+          console.log('send response')
+          console.log('respone:', response)
+          chrome.runtime.sendMessage({ action: 'eventCreated', response: response });
         }
+
         return true; // 비동기 응답을 위해 true를 반환
       });
+
+
       return true;
     }
   });
@@ -97,8 +100,6 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       });
 
     });
-
-
     // console.log(eventSchedule)
 
   }
@@ -199,6 +200,9 @@ async function createCalendarEvent(eventSchedule) {
     const token = await getAccessToken(true);
     // console.log('Make eventSchedule : ')
     // console.log(eventSchedule)
+    console.log('token fetched! : ', token)
+    console.log('fetch response...')
+
     const response = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
       method: 'POST',
       headers: {
@@ -207,6 +211,9 @@ async function createCalendarEvent(eventSchedule) {
       },
       body: JSON.stringify(eventSchedule)
     });
+
+    console.log('response fetched!')
+    console.log('response : ', response)
 
     if (response.ok) {
       // console.log('Got response')
